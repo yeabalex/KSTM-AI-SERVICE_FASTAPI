@@ -1,0 +1,17 @@
+langchain
+langchain-google-genai
+langchain-community
+langchain-core
+PyMuPDF
+requests
+beautifulsoup4
+selenium
+webdriver-manager
+streamlit
+matplotlib
+python-dotenv
+google-generativeai
+neo4j
+pathlib
+dotenv
+fastapi
