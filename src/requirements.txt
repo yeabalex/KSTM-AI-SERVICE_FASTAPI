@@ -17,3 +17,4 @@ dotenv
 fastapi
 gunicorn
 uvicorn
+redis
