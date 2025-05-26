@@ -16,3 +16,4 @@ pathlib
 dotenv
 fastapi
 gunicorn
+uvicorn
