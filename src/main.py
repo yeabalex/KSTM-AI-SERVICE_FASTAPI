@@ -1,5 +1,6 @@
 import logging
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl, Field
 from typing import List, Optional
 import uuid
@@ -32,7 +33,7 @@ os.environ.update({
     "LANGCHAIN_API_KEY": os.getenv("LANGCHAIN_API_KEY")
 })
 
-
+# Redis connection
 try:
     redis_client = redis.from_url(os.getenv("REDIS_URL"), decode_responses=False)
     redis_client.ping()
@@ -44,6 +45,15 @@ except redis.ConnectionError as e:
 
 # FastAPI app
 app = FastAPI()
+
+# Enable CORS for specific domain
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://api.yeabsiraa.com"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Pydantic models
 class CreateBotRequest(BaseModel):
@@ -128,11 +138,10 @@ def query_bot(request: QueryRequest):
         # Create and run retrieval chain
         base_chain = create_chains(prompt_template)
         retriever = db.as_retriever(search_kwargs={
-        "filter": {
-            "source_url": kb_id  # or your specific URL/id
-        }
-        }
-        )
+            "filter": {
+                "source_url": kb_id  # or your specific URL/id
+            }
+        })
 
         retrieval_chain = create_retrieval_chain(retriever, base_chain)
         response = retrieval_chain.invoke({
